@@ -12,7 +12,7 @@
   }
 
   #calculator {
-    width: 1200px;
+    width: 1000px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -24,24 +24,47 @@
   .display {
     width: 100%;
     height: 60px;
+    max-width: 100%;
     margin-bottom: 20px;
     padding: 10px;
-    font-size: 2em;
+    font-size: 1em;
     text-align: right;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background: white;
-    color: black;
+    background: black;
+    color: white;
   }
   
   .col{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
+
+    *{
+    background-color: #ffffff;
+    color: #333;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif; /* or any other preferred font */
+    font-size: 18px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    user-select: none; /* Prevent text selection */
+      
+    }
+
+    *:hover {
+      background-color: #e0e0e055;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+    
+
   }
 
   .zerobutton{
-    grid-column: 1 / span 4;
+    grid-column: 1 / span 3;
   }
 
   .clearbutton{
@@ -56,7 +79,7 @@
   }
 
   .equalsbutton{
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 4;
     background: #1c6ea4;
     color: white;
     border-radius: 5px;
