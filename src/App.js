@@ -1,122 +1,235 @@
-import React, {useState} from 'react';
-import './App.scss';
+import { useState } from "react";
+import "./App.scss";
 
 function App() {
-  const [display, setDisplay] = useState('0');
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
+  const [expression, setExpression] = useState("");
+  const et = expression.trim();
 
+  const isOperator = (symbol) => {
+    return /[*/+-]/.test(symbol);
+  };
 
-  const handleNumber = (event) => {
-    const number = event.target.textContent;
-    if (display === '0') {
-      setDisplay(number);
+  const buttonPress = (symbol) => {
+    if (symbol === "clear") {
+      setAnswer("");
+      setExpression("0");
+    } else if (symbol === "negative") {
+      if (answer === "") return;
+      setAnswer(
+        answer.toString().charAt(0) === "-" ? answer.slice(1) : "-" + answer
+      );
+    } else if (symbol === "percent") {
+      if (answer === "") return;
+      setAnswer((parseFloat(answer) / 100).toString());
+    } else if (isOperator(symbol)) {
+      setExpression(et + " " + symbol + " ");
+    } else if (symbol === "=") {
+      calculate();
+    } else if (symbol === "0") {
+      if (expression.charAt(0) !== "0") {
+        setExpression(expression + symbol);
+      }
+    } else if (symbol === ".") {
+      // split by operators and get last number
+      const lastNumber = expression.split(/[-+/*]/g).pop();
+      if (!lastNumber) return;
+      console.log("lastNumber :>> ", lastNumber);
+      // if last number already has a decimal, don't add another
+      if (lastNumber?.includes(".")) return;
+      setExpression(expression + symbol);
     } else {
-      setDisplay(display + number);
-    }
-  };
-    
-  const handleOperator = (event) => {
-    const operator = event.target.textContent;
-   
-    if (display.slice(-1) === '+' || display.slice(-1) === '*' || display.slice(-1) === '/' || display.slice(-1) === '-') {
-      setDisplay(display.slice(0, -1) + operator);
-    } else if(
-      display === '0' && operator === '-'){
-      setDisplay(operator);
-    }
-    else {
-      setDisplay(display + ' ' + operator + ' ');
-    }
-
-    };
-
-  const handleClear = () => {
-    setDisplay('0');
-    setAnswer('');
-  };
-
-  const handleEquals = () => {
-    try {
-      const result = eval(display); 
-      setAnswer(result.toString());
-    } catch (error) {
-      setAnswer('Error');
+      if (expression.charAt(0) === "0") {
+        setExpression(expression.slice(1) + symbol);
+      } else {
+        setExpression(expression + symbol);
+      }
     }
   };
 
-  const handleDecimal = () => {
-     const array = display.split(/[\+\-\*\/]/);
-      const lastNumber = array[array.length - 1];
-      if (!lastNumber.includes('.')) {
-        setDisplay(display + '.');
+  const calculate = () => {
+    // if last char is an operator, do nothing
+    if (isOperator(et.charAt(et.length - 1))) return;
+    // clean the expression so that two operators in a row uses the last operator
+    // 5 * - + 5 = 10
+    const parts = et.split(" ");
+    const newParts = [];
+
+    // go through parts backwards
+    for (let i = parts.length - 1; i >= 0; i--) {
+      if (["*", "/", "+"].includes(parts[i]) && isOperator(parts[i - 1])) {
+        newParts.unshift(parts[i]);
+        let j = 0;
+        let k = i - 1;
+        while (isOperator(parts[k])) {
+          k--;
+          j++;
+        }
+        i -= j;
+      } else {
+        newParts.unshift(parts[i]);
+      }
     }
-  }
+    const newExpression = newParts.join(" ");
+    if (isOperator(newExpression.charAt(0))) {
+      setAnswer(eval(answer + newExpression));
+    } else {
+      setAnswer(eval(newExpression));
+    }
+    setExpression("");
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-      <div className="calculator">
-      <div className="display" id="display">
-        <div id="answer">{answer}</div>
-        <div id="formula">{display}</div>
+      <div className="container">
+        <div id="calculator">
+          <div className="display" id="display">
+            <div id="answer">{answer}</div>
+            <div id="expression">{expression}</div>
+          </div>
+          <div className="col">
+          <button
+            id="clear"
+            onClick={() => buttonPress("clear")}
+            className="clearbutton"
+          >
+            C
+          </button>
+          <button
+            id="negative"
+            onClick={() => buttonPress("negative")}
+            className="operator"
+          >
+            +/-
+          </button>
+          
+          <button
+            id="percentage"
+            onClick={() => buttonPress("percentage")}
+            className="operator"
+          >
+            %
+          </button>
+          </div>
+          <div className="col">
+          <button
+            id="seven"
+            onClick={() => buttonPress("7")}
+            className="number"
+          >
+            7
+          </button>
+          <button
+            id="eight"
+            onClick={() => buttonPress("8")}
+            className="number"
+          >
+            8
+          </button>
+          <button
+            id="nine"
+            onClick={() => buttonPress("9")}
+            className="number"
+          >
+            9
+          </button>
+          <button
+            id="divide"
+            onClick={() => buttonPress("/")}
+            className="operator"
+          >
+            /
+          </button>
+          </div>
+
+          <div className="col">
+          <button
+            id="four"
+            onClick={() => buttonPress("4")}
+            className="number"
+          >
+            4
+          </button>
+          <button
+            id="five"
+            onClick={() => buttonPress("5")}
+            className="number"
+          >
+            5
+          </button>
+          <button
+            id="six"
+            onClick={() => buttonPress("6")}
+            className="number"
+          >
+            6
+          </button>
+          <button
+            id="multiply"
+            onClick={() => buttonPress("*")}
+            className="operator"
+          >
+            *
+          </button>
+          </div>
+          <div className="col">
+          <button
+            id="one"
+            onClick={() => buttonPress("1")}
+            className="number"
+          >
+            1
+          </button>
+          <button
+            id="two"
+            onClick={() => buttonPress("2")}
+            className="number"
+          >
+            2
+          </button>
+          <button
+            id="three"
+            onClick={() => buttonPress("3")}
+            className="number"
+          >
+            3
+          </button>
+          <button
+            id="subtract"
+            onClick={() => buttonPress("-")}
+            className="operator"
+          >
+            -
+          </button>
+          </div>
+          <div className="col">
+          <button
+            id="zero"
+            onClick={() => buttonPress("0")}
+            className="number zerobutton"
+          >
+            0
+          </button>
+          <button
+            id="decimal"
+            onClick={() => buttonPress(".")}
+            className="operator"
+          >
+            .
+          </button>
+          <button id="add" onClick={() => buttonPress("+")} className="operator">
+            +
+          </button>
+          <button
+            id="equals"
+            onClick={() => buttonPress("=")}
+            className="equalsbutton"
+          >
+            =
+          </button>
+          </div>
+        </div>
       </div>
-      <Buttons numbers={handleNumber} operators={handleOperator} clear={handleClear} equals={handleEquals} decimal={handleDecimal}/>
-      </div>
-      </header>
-    </div>
   );
 }
 
-function Numbers(props){
-  return(
-    <button id={props.digit} className='number' onClick={props.function}>{props.number}</button>
-  )
-};
-
-function Operator(props){
-  return(
-    <button id={props.operator} className='operator' onClick={props.function}>{props.symbol}</button>
-  )
-}
-
-function Buttons(props){
-
-  
-  return(
-    <>
-      <div className="col">
-        <button id='clear' className='clearbutton' onClick={props.clear}>C</button>
-        <Operator operator='divide' symbol='/' function={props.operators}/>
-        <Operator operator='multiply' symbol='*' function={props.operators}/>
-      </div>
-
-      <div className="col">
-        <Numbers digit='seven' number='7' function={props.numbers}/>
-        <Numbers digit='eight' number='8' function={props.numbers}/>
-        <Numbers digit='nine' number='9' function={props.numbers}/>
-        <Operator operator='subtract' symbol='-' function={props.operators}/>
-      </div>
-
-      <div className="col">
-        <Numbers digit='four' number='4' function={props.numbers}/>
-        <Numbers digit='five' number='5' function={props.numbers}/>
-        <Numbers digit='six' number='6' function={props.numbers}/>
-        <Operator operator='add' symbol='+' function={props.operators}/>
-      </div>
-
-      <div className="col">
-        <Numbers digit='one' number='1'  function={props.numbers}/>
-        <Numbers digit='two' number='2'  function={props.numbers}/>
-        <Numbers digit='three' number='3' function={props.numbers}/>
-        <Operator operator='decimal' symbol='.' function={props.decimal}/>
-      </div>
-     
-
-      <div className="col">
-        <button id='zero' className='number zerobutton' onClick={props.numbers}>0</button>
-        <button id='equals' className='equalsbutton' onClick={props.equals}>=</button>
-      </div>
-    </>
-  )
-}
 export default App;

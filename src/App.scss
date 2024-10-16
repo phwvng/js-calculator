@@ -1,23 +1,28 @@
 .App {
   text-align: center;
-  .App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
+}
+
+
+
+.container {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  font-family: 'Roboto', sans-serif;
+  color: white;
+
 
   #calculator {
-    width: 1000px;
+    width: 800px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 5px solid #ccc;
     border-radius: 5px;
-    background: #f4f4f4;
+    background: #f4f4f40f;
   }
 
  
@@ -33,6 +38,10 @@
     border-radius: 5px;
     background: black;
     color: white;
+    
+    #formula{
+      opacity:  0.5;
+    }
   }
   
   .col{
@@ -56,7 +65,7 @@
     }
 
     *:hover {
-      background-color: #e0e0e055;
+      background-color: #0000000a;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
     
@@ -64,17 +73,16 @@
   }
 
   .zerobutton{
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 2;
   }
-
   .clearbutton{
     grid-column: 1 / span 2;
-    background: red;
+    background: rgba(111, 0, 0, 0.928);
     color: white;
   }
   
   .operator{
-    background: #333;
+    background: #141c34;  
     color: white;
   }
 
@@ -86,9 +94,8 @@
   }
 
   .number{
-    background: #339;
+    background: rgb(60, 60, 130);
     color: white;
   }
 
 }
-
