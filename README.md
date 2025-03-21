@@ -1,3 +1,3 @@
 JS Calculator project for a freeCodeCamp frontend frameworks certification
 
-DEMO: https://moonprincelol.github.io/js-calculator/
+DEMO: https://phwvng.github.io/js-calculator/
